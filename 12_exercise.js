@@ -68,4 +68,47 @@ function filter(results, filters) {
   return out;
 }
 
+function filterGradOptions(options, filters) {
+  if (Array.isArray(filters)) {
+    const vars = options.filter(option => {
+      return filters.every(f => {
+        return option.code === f;
+      });
+    });
+    return vars.length > 0;
+  }
+
+  return options.some(option => {
+    return option.code === filters;
+  });
+}
+
+function filter(candidates, filters) {
+  if (!filters.length) {
+    return candidates;
+  }
+
+  if (filters.indexOf('AVAILABLE_IMMEDIATELY') > -1) {
+    return candidates.filter(student => {
+      return filterGradOptions(student.options, 'AVAILABLE_IMMEDIATELY');
+    });
+  }
+
+  if (filters.indexOf('FRESH_GRAD') > -1) {
+    return candidates.filter(student => {
+      return filterGradOptions(student.options, 'FRESH_GRAD');
+    });
+  }
+
+  return candidates.filter(student => {
+    return filterGradOptions(student.options, filters);
+  });
+
+  // return candidates.reduce((prevCandidate, curCandidate) => {
+  //   filters.forEach(filter => {
+  //     return filterGradOptions(curCandidate.options, filter);
+  //   });
+  // });
+}
+
 module.exports = filter;

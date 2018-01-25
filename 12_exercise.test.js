@@ -57,7 +57,7 @@ it('should return 1 candidate with [JUNIOR, PHP]', () => {
   expect(candidates[0].name).toBe('Marc Brown');
 });
 
-it('should return 5 candidate with [JAVASCRIPT]', () => {
+it('should return 4 candidate with [JAVASCRIPT]', () => {
   const candidates = filter(data, ['JAVASCRIPT']);
 
   expect(candidates.length).toBe(4);
