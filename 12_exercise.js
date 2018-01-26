@@ -16,7 +16,7 @@
  *   happy refactory :)
  */
 
-function filter(results, filters) {
+function filterOld(results, filters) {
   var out = [];
   var resultsLength = results.length;
   var filterLength = filters.length;
@@ -68,18 +68,9 @@ function filter(results, filters) {
   return out;
 }
 
-function filterGradOptions(options, filters) {
-  if (Array.isArray(filters)) {
-    const vars = options.filter(option => {
-      return filters.every(f => {
-        return option.code === f;
-      });
-    });
-    return vars.length > 0;
-  }
-
+function filterOptionExists(options, filter) {
   return options.some(option => {
-    return option.code === filters;
+    return option.code === filter;
   });
 }
 
@@ -88,27 +79,25 @@ function filter(candidates, filters) {
     return candidates;
   }
 
-  if (filters.indexOf('AVAILABLE_IMMEDIATELY') > -1) {
+  if (filters.includes('AVAILABLE_IMMEDIATELY')) {
     return candidates.filter(student => {
-      return filterGradOptions(student.options, 'AVAILABLE_IMMEDIATELY');
+      return filterOptionExists(student.options, 'AVAILABLE_IMMEDIATELY');
     });
   }
 
-  if (filters.indexOf('FRESH_GRAD') > -1) {
+  if (filters.includes('FRESH_GRAD')) {
     return candidates.filter(student => {
-      return filterGradOptions(student.options, 'FRESH_GRAD');
+      return filterOptionExists(student.options, 'FRESH_GRAD');
     });
   }
 
-  return candidates.filter(student => {
-    return filterGradOptions(student.options, filters);
+  let temp = candidates;
+  filters.forEach(filter => {
+    temp = temp.filter(student => {
+      return filterOptionExists(student.options, filter);
+    });
   });
-
-  // return candidates.reduce((prevCandidate, curCandidate) => {
-  //   filters.forEach(filter => {
-  //     return filterGradOptions(curCandidate.options, filter);
-  //   });
-  // });
+  return temp;
 }
 
 module.exports = filter;
